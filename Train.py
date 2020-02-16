@@ -1,10 +1,5 @@
 import tensorflow as tf
 
-ubuntu_root='/home/tigerc/temp'
-windows_root='D:/Automatic/SRTP/GAN/temp'
-model_dataset = 'translate_pt_to_en'
-root = ubuntu_root
-
 def discriminator_loss(real_output, fake_output):
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
@@ -50,6 +45,6 @@ class train_one_epoch():
         for (batch, (images, noise)) in enumerate(self.train_dataset):
             self.train_step(images, noise)
             pic.add([self.gen_loss.result().numpy(), self.disc_loss.result().numpy()])
-            pic.save(root + '/temp_pic_save/' + model_dataset)
+            pic.save()
             if batch % 500 == 0:
                 print('epoch: {}, gen loss: {}, disc loss: {}'.format(epoch, self.gen_loss.result(), self.disc_loss.result()))

@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 import os
-import numpy as np
-import random
 import tensorflow as tf
 from GAN import generator, discriminator
 from show_pic import draw
@@ -10,7 +8,7 @@ from mnist import mnist_dataset
 
 ubuntu_root='/home/tigerc/temp'
 windows_root='D:/Automatic/SRTP/GAN/temp'
-model_dataset = 'translate_pt_to_en'
+model_dataset = 'dcgan_mnist'
 root = windows_root
 
 def main():
@@ -40,13 +38,13 @@ def main():
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss])
 
-    for epoch in range(0):
+    for epoch in range(50):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
-
-    pic.save_created_pic(generator_model, 8, noise_dim, 0)
+        pic.save_created_pic(generator_model, 8, noise_dim, epoch)
+    pic.show_created_pic(generator_model, 8, noise_dim)
     return
 
 if __name__ == '__main__':
