@@ -12,7 +12,8 @@ class mnist_dataset():
         self.noise_dim = noise_dim
         return
     def parse(self, x, y):
-        x=tf.cast(x, tf.float64)
+        x=tf.cast(x, tf.float32)
+        # x = tf.expand_dims(x, -1)
         x=x/255-0.5
         noise = tf.random.normal([self.noise_dim])
         return noise, x

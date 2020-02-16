@@ -25,7 +25,7 @@ def main():
     pic = draw(10)
     noise_dim = 128
     dataset = mnist_dataset()
-    train_dataset = dataset.train_dataset()
+    train_dataset = dataset.get_train_dataset()
 
     generator_optimizer = tf.keras.optimizers.Adam(1e-4)
     discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
@@ -34,9 +34,9 @@ def main():
     discriminator_model = discriminator()
 
     checkpoint_path = root + '/temp_model_save/' + model_dataset
-    ckpt = tf.train.Checkpoint(optimizers=[generator_optimizer, discriminator_optimizer ],generator=generator_model, discriminator=discriminator_model)
+    ckpt = tf.train.Checkpoint(genetator_optimizers=generator_optimizer, discriminator_optimizer=discriminator_optimizer ,
+                               generator=generator_model, discriminator=discriminator_model)
     ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=5)
-    # 如果检查点存在，则恢复最新的检查点。
     if ckpt_manager.latest_checkpoint:
         ckpt.restore(ckpt_manager.latest_checkpoint)
         print('Latest checkpoint restored!!')
