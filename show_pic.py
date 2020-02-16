@@ -1,16 +1,28 @@
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 import numpy as np
-from threading import Thread
 from time import sleep
+import os
+import tensorflow as tf
 
 class draw:
   batch_list = []
   loss_list = []
   acc_list = []
   i = 0
-  def __init__(self, pic_size):
+  def __init__(self, pic_size, root, model_dataset):
     rcParams['figure.figsize']=pic_size, pic_size
+    self.pic_path = root + '/temp_pic/' + model_dataset
+    self.pic_save_path = root + '/temp_pic_save/' + model_dataset
+    self.generated_pic_path = root + '/generated_pic/' + model_dataset
+
+    if not (os.path.exists(self.pic_path)):
+        os.makedirs(self.pic_path)
+    if not (os.path.exists(self.pic_save_path)):
+        os.makedirs(self.pic_save_path)
+    if not (os.path.exists(self.generated_pic_path)):
+        os.makedirs(self.generated_pic_path)
+
     self.fig = plt.figure(figsize=(12, 4))
     self.batch_list = []
     self.train_loss_list = []
@@ -32,7 +44,8 @@ class draw:
       self.batch_list.append(self.i)
       self.train_loss_list.append(history['loss'])
       self.train_acc_list.append(history['accuracy'])
-  def save(self, NetPath):
+  def save(self):
+    NetPath = self.pic_save_path
     np.save(NetPath+'/b.npy', np.array(self.batch_list))
     np.save(NetPath+'/train_loss.npy', np.array(self.train_loss_list))
     np.save(NetPath+'/train_acc.npy', np.array(self.train_acc_list))
@@ -43,7 +56,8 @@ class draw:
   def close(self, time):
       sleep(time)
       plt.close()
-  def show(self, file_path='E:/temp_pic/pic'):
+  def show(self):
+    file_path = self.pic_path
     plt.clf()
     ax1 = self.fig.add_subplot(121)
     ax2 = self.fig.add_subplot(122)
@@ -59,13 +73,29 @@ class draw:
     # thread1 = Thread(target=self.close, args=(1,))
     # thread1.start()
     # plt.show()
-  def show_images(self, images):
-    for i in range(images.shape[0]):
-      plt.subplot(1, images.shape[0], i + 1)
-      plt.imshow(images[i])
-      plt.axis('off')
-    plt.tight_layout()
-    plt.show()
   def show_image(self, image):
     plt.imshow(image)
     plt.show()
+
+  def show_created_pic(self, generator, pic_num, noise_dim):
+    x = tf.convert_to_tensor(np.random.rand(pic_num, noise_dim))
+    y = generator(x)
+    for i in range(pic_num):
+      plt.subplot(1, pic_num, i + 1)
+      plt.imshow(y[i].numpy().reshape(28, 28) / 255 - 0.5, 'gray')
+      plt.axis('off')
+      plt.tight_layout()
+    plt.show()
+    return
+
+  def save_created_pic(self, generator, pic_num, noise_dim, epoch):
+    x = tf.convert_to_tensor(np.random.rand(pic_num, noise_dim))
+    y = generator(x)
+    y=tf.squeeze(y)
+    for i in range(pic_num):
+      # plt.subplot(1, pic_num, i + 1)
+      # plt.imshow(y[i].numpy().reshape(28, 28) / 255 - 0.5, 'gray')
+      # plt.axis('off')
+      # plt.tight_layout()
+      plt.imsave(self.generated_pic_path+'/{}_{}.png'.format(epoch, i), y[i].numpy())
+    return

@@ -7,22 +7,15 @@ from GAN import generator, discriminator
 from show_pic import draw
 from Train import train_one_epoch
 from mnist import mnist_dataset
-from evaluate import show_created_pic
 
 ubuntu_root='/home/tigerc/temp'
 windows_root='D:/Automatic/SRTP/GAN/temp'
 model_dataset = 'translate_pt_to_en'
-root = ubuntu_root
+root = windows_root
 
 def main():
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
-    if not (os.path.exists(root + '/temp_pic/' + model_dataset)):
-        os.makedirs(root + '/temp_pic/' + model_dataset)
-    if not (os.path.exists(root + '/temp_pic_save/' + model_dataset)):
-        os.makedirs(root + '/temp_pic_save/' + model_dataset)
-    if not(os.path.exists(root + '/temp_txt_save/'+model_dataset)):
-        os.makedirs(root + '/temp_txt_save/'+model_dataset)
-    pic = draw(10)
+    pic = draw(10, root, model_dataset)
     noise_dim = 128
     dataset = mnist_dataset()
     train_dataset = dataset.get_train_dataset()
@@ -47,14 +40,13 @@ def main():
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss])
 
-    for epoch in range(10):
+    for epoch in range(0):
         train.train(epoch=epoch, pic=pic)
-        pic.show(root+'/temp_pic/' + model_dataset + '/pic')
+        pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
 
-    x = tf.convert_to_tensor(np.random.rand(8, noise_dim))
-    show_created_pic(generator, x)
+    pic.save_created_pic(generator_model, 8, noise_dim, 0)
     return
 
 if __name__ == '__main__':

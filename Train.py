@@ -51,4 +51,5 @@ class train_one_epoch():
             self.train_step(images, noise)
             pic.add([self.gen_loss.result().numpy(), self.disc_loss.result().numpy()])
             pic.save(root + '/temp_pic_save/' + model_dataset)
-            print('epoch: {}, gen loss: {}, disc loss: {}'.format(epoch, self.gen_loss.result(), self.disc_loss.result()))
+            if batch % 500 == 0:
+                print('epoch: {}, gen loss: {}, disc loss: {}'.format(epoch, self.gen_loss.result(), self.disc_loss.result()))
