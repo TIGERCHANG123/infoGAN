@@ -34,27 +34,20 @@ class generator(tf.keras.Model):
     self.front_layer = generator_block_Dense(7*7*256, input_shape)
     Conv2Dlist = [128, 64, 1]
     self.Conv2DTranspose=[]
-    self.dropout=[]
 
+    self.reshape = tf.keras.layers.Reshape((7, 7, 256))
     self.Conv2DTranspose.append(generator_block_Conv2DTranspose(Conv2Dlist[0], 1))
-    self.dropout.append(tf.keras.layers.Dropout(0.5))
-
     self.Conv2DTranspose.append(generator_block_Conv2DTranspose(Conv2Dlist[1], 2))
-    self.dropout.append(tf.keras.layers.Dropout(0.5))
-
     self.Conv2DTranspose.append(generator_block_Conv2DTranspose(Conv2Dlist[2], 2))
-    self.dropout.append(tf.keras.layers.Dropout(0.5))
 
     self.flatten = tf.keras.layers.Flatten()
   def call(self, x):
     x = self.flatten(x)
     x = self.front_layer(x)
-    x = tf.keras.layers.Reshape((7, 7, 256))(x)
+    x = self.reshape(x)
     for i in range(len(self.Conv2DTranspose) - 1):
-      x = self.Conv2DTranspose[i](x, True)
-      x = self.dropout[i](x)
-    x = self.Conv2DTranspose[-1](x, False)
-    x = self.dropout[-1](x)
+      x = self.Conv2DTranspose[i](x, output=False)
+    x = self.Conv2DTranspose[-1](x, output=True)
     return x
 
 class discriminator(tf.keras.Model):

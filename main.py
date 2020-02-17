@@ -36,7 +36,7 @@ def main():
     disc_loss = tf.keras.metrics.Mean(name='disc_loss')
 
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
-              optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss])
+              optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss], noise_dim=noise_dim)
 
     for epoch in range(50):
         train.train(epoch=epoch, pic=pic)
