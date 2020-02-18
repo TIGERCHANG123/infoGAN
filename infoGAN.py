@@ -5,25 +5,27 @@ import numpy as np
 class generator(tf.keras.Model):
   def __init__(self, gen_input_shape, img_shape):
     super(generator, self).__init__()
-    self.img_shape = img_shape
     self.gen_input_shape = gen_input_shape
+    self.img_shape = img_shape
 
     self.model = tf.keras.Sequential()
+    self.model.add(layers.Dense(7 * 7 * 256, use_bias=False, input_shape=gen_input_shape))
+    self.model.add(layers.BatchNormalization())
+    self.model.add(layers.ReLU())
+    self.model.add(layers.Reshape((7, 7, 256)))
 
-    self.model.add(tf.keras.layers.Dense(256, input_shape=gen_input_shape))
-    self.model.add(tf.keras.layers.BatchNormalization(momentum=0.8))
-    self.model.add(tf.keras.layers.LeakyReLU(alpha=0.2))
-    self.model.add(tf.keras.layers.Dense(512))
-    self.model.add(tf.keras.layers.BatchNormalization(momentum=0.8))
-    self.model.add(tf.keras.layers.LeakyReLU(alpha=0.2))
-    self.model.add(tf.keras.layers.Dense(1024))
-    self.model.add(tf.keras.layers.BatchNormalization(momentum=0.8))
-    self.model.add(tf.keras.layers.LeakyReLU(alpha=0.2))
-    self.model.add(tf.keras.layers.Dense(np.prod(self.img_shape), activation='tanh'))
-    self.model.add(tf.keras.layers.Reshape(self.img_shape))
+    self.model.add(layers.Conv2DTranspose(128, (5, 5), strides=2, padding='same', use_bias=False))
+    self.model.add(layers.BatchNormalization())
+    self.model.add(layers.ReLU())
+
+    self.model.add(layers.Conv2DTranspose(64, (5, 5), strides=2, padding='same', use_bias=False))
+    self.model.add(layers.BatchNormalization())
+    self.model.add(layers.ReLU())
+
+    self.model.add(layers.Conv2DTranspose(1, (5, 5), strides=1, padding='same', use_bias=False))
+    self.model.add(layers.Activation(activation='tanh'))
   def call(self, x):
-    x=self.model(x)
-    return x
+    return self.model(x)
 
 class discriminator(tf.keras.Model):
   def __init__(self, input_shape):
