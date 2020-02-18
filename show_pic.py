@@ -77,8 +77,8 @@ class draw:
     plt.imshow(image)
     plt.show()
 
-  def show_created_pic(self, generator, pic_num, noise_dim):
-    x = tf.convert_to_tensor(np.random.rand(pic_num, noise_dim))
+  def show_created_pic(self, generator, pic_num, noise_generator):
+    x = noise_generator.get_fixed_noise()
     y = generator(x)
     for i in range(pic_num):
       plt.subplot(1, pic_num, i + 1)
@@ -88,14 +88,10 @@ class draw:
     plt.show()
     return
 
-  def save_created_pic(self, generator, pic_num, noise_dim, epoch):
-    x = tf.convert_to_tensor(np.random.rand(pic_num, noise_dim))
+  def save_created_pic(self, generator, pic_num, epoch, noise_generator):
+    x = noise_generator.get_fixed_noise()
     y = generator(x)
     y=tf.squeeze(y)
     for i in range(pic_num):
-      # plt.subplot(1, pic_num, i + 1)
-      # plt.imshow(y[i].numpy().reshape(28, 28) / 255 - 0.5, 'gray')
-      # plt.axis('off')
-      # plt.tight_layout()
       plt.imsave(self.generated_pic_path+'/{}_{}.png'.format(epoch, i), y[i].numpy())
     return
