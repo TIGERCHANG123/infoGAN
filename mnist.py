@@ -1,6 +1,7 @@
 from __future__ import print_function
 import tensorflow_datasets as tfds
 import tensorflow as tf
+import numpy as np
 
 class mnist_dataset():
     def __init__(self, root):

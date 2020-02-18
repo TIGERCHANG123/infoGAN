@@ -1,15 +1,16 @@
 import tensorflow as tf
 from tensorflow.keras import layers
+import numpy as np
 
 class generator(tf.keras.Model):
-  def __init__(self, noise_shape, img_shape):
+  def __init__(self, gen_input_shape, img_shape):
     super(generator, self).__init__()
     self.img_shape = img_shape
-    self.noise_shape = noise_shape
+    self.gen_input_shape = gen_input_shape
 
     self.model = tf.keras.Sequential()
 
-    self.model.add(tf.keras.layers.Dense(256, input_shape=noise_shape))
+    self.model.add(tf.keras.layers.Dense(256, input_shape=gen_input_shape))
     self.model.add(tf.keras.layers.BatchNormalization(momentum=0.8))
     self.model.add(tf.keras.layers.LeakyReLU(alpha=0.2))
     self.model.add(tf.keras.layers.Dense(512))
@@ -25,7 +26,7 @@ class generator(tf.keras.Model):
     return x
 
 class discriminator(tf.keras.Model):
-  def __init__(self, input_shape=[28, 28, 1]):
+  def __init__(self, input_shape):
     super(discriminator, self).__init__()
     self.conv_input = layers.Conv2D(64, (5, 5), strides=(2, 2), padding='same',input_shape=input_shape)
     self.bn1 = tf.keras.layers.BatchNormalization()
@@ -67,8 +68,8 @@ class auxiliary(tf.keras.Model):
     x = self.outputDense(x)
     return x
 
-def get_gan(noise_shape, img_shape):
-  Generator = generator(noise_shape, img_shape)
+def get_gan(gen_input_shape, img_shape):
+  Generator = generator(gen_input_shape, img_shape)
   Discriminator = discriminator(img_shape)
   Auxiliary = auxiliary()
   gen_name = 'infoGAN'

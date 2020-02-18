@@ -68,6 +68,6 @@ class train_one_epoch():
         for (batch, image) in enumerate(self.train_dataset):
             noise, auxi_code = self.noise_genrator.get_noise()
             self.train_step(noise, auxi_code, image)
-            pic.add([self.gen_loss.result().numpy(), self.disauxi_loss.result().numpy()])
+            pic.add([self.gen_loss.result().numpy(), self.disauxi_loss.result().numpy(), self.auxi_loss.result()])
             # if batch % 500 == 0:
-            print('epoch: {}, gen loss: {}, disc loss: {}, auxi loss: {}'.format(epoch, self.gen_loss.result(), self.disauxi_loss.result(), self.auxi_loss.result()))
+        print('epoch: {}, gen loss: {}, disc loss: {}, auxi loss: {}'.format(epoch, self.gen_loss.result(), self.disauxi_loss.result(), self.auxi_loss.result()))
