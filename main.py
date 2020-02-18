@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 import tensorflow as tf
+import numpy as np
 from infoGAN import generator, discriminator, auxiliary
 from show_pic import draw
 from Train import train_one_epoch
@@ -50,8 +51,8 @@ def main():
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
-        pic.save_created_pic(generator_model, 8,  epoch, noise_generator=get_noise)
-    pic.show_created_pic(generator_model, 8, noise_generator=get_noise)
+        pic.save_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=get_noise, epoch=epoch)
+    pic.show_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=get_noise)
     return
 
 if __name__ == '__main__':
