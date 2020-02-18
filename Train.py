@@ -1,8 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-
-
 class train_one_epoch():
     def __init__(self, model, train_dataset, optimizers, metrics, noise_generator):
         self.generator, self.discriminator, self.auxiliary = model
@@ -71,6 +69,5 @@ class train_one_epoch():
             noise, auxi_code = self.noise_genrator.get_noise()
             self.train_step(noise, auxi_code, image)
             pic.add([self.gen_loss.result().numpy(), self.disauxi_loss.result().numpy()])
-            pic.save()
             # if batch % 500 == 0:
-            print('epoch: {}, gen loss: {}, disc loss: {}'.format(epoch, self.gen_loss.result(), self.disauxi_loss.result()))
+            print('epoch: {}, gen loss: {}, disc loss: {}, auxi loss: {}'.format(epoch, self.gen_loss.result(), self.disauxi_loss.result(), self.auxi_loss.result()))

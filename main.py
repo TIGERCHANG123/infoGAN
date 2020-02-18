@@ -41,6 +41,7 @@ def main(continue_train, train_time):
     ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=5)
     if ckpt_manager.latest_checkpoint and continue_train:
         ckpt.restore(ckpt_manager.latest_checkpoint)
+        pic.load()
         print('Latest checkpoint restored!!')
 
     train = train_one_epoch(model=[generator_model, discriminator_model, auxiliary_model], train_dataset=train_dataset,
@@ -53,6 +54,7 @@ def main(continue_train, train_time):
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
+            pic.save()
         pic.save_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=noise_gen, epoch=epoch)
     pic.show_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=noise_gen)
     return
