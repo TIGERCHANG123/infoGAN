@@ -10,11 +10,12 @@ class draw:
   loss_list = []
   acc_list = []
   i = 0
-  def __init__(self, pic_size, root, model_dataset):
+  def __init__(self, pic_size, root, model_dataset, train_time):
     rcParams['figure.figsize']=pic_size, pic_size
     self.pic_path = root + '/temp_pic/' + model_dataset
     self.pic_save_path = root + '/temp_pic_save/' + model_dataset
     self.generated_pic_path = root + '/generated_pic/' + model_dataset
+    self.train_time = train_time
 
     if not (os.path.exists(self.pic_path)):
         os.makedirs(self.pic_path)
@@ -69,7 +70,7 @@ class draw:
     ax1.set(xlabel='batches',ylabel='loss', title = 'gen_loss')
     ax2.set(xlabel='batches',ylabel='loss', title = 'disc_loss')
 
-    plt.savefig(file_path+str(self.i) + '.png')
+    plt.savefig(file_path+'/{}_{}.png'.format(self.train_time, str(self.i)))
     # thread1 = Thread(target=self.close, args=(1,))
     # thread1.start()
     # plt.show()

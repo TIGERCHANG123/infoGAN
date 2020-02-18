@@ -1,17 +1,14 @@
 from __future__ import print_function
 import tensorflow_datasets as tfds
 import tensorflow as tf
-import numpy as np
-
-ubuntu_root='/home/tigerc/temp'
-windows_root='D:/Automatic/SRTP/GAN'
 
 class mnist_dataset():
-    def __init__(self, file_path = windows_root+'/datasets', noise_dim = 100):
+    def __init__(self, root):
+        file_path = root + '/datasets/tensorflow_datasets'
         mnist, meta = tfds.load('mnist', data_dir=file_path, download=False, as_supervised=True, with_info=True)
         print(meta)
         self.train_dataset=mnist['train']
-        self.noise_dim = noise_dim
+        self.name = 'mnist'
         return
     def parse(self, x, y):
         x=tf.cast(x, tf.float32)
