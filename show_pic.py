@@ -81,11 +81,9 @@ class draw:
     auxi_con_1, auxi_con_2 = auxi_list
     for i, num in enumerate(num_list):
       _, _, x = noise_generator.get_fixed_noise(num, auxi_con_1, auxi_con_2)
-      print(x)
       y = generator(x)
       y=tf.squeeze(y, axis=-1)
       plt.subplot(1, len(num_list), i + 1)
-      print(y[i].numpy().shape)
       plt.imshow(y[i].numpy(), 'gray')
       plt.axis('off')
       plt.tight_layout()
