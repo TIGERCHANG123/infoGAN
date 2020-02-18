@@ -85,8 +85,8 @@ def get_gan(gen_input_shape, img_shape):
   Generator = generator(gen_input_shape, img_shape)
   Discriminator = discriminator(input_shape=img_shape)
   Auxiliary = auxiliary()
-  gen_name = 'infoGAN'
-  return Generator, Discriminator, Auxiliary, gen_name
+  gan_name = 'infoGAN'
+  return Generator, Discriminator, Auxiliary, gan_name
 
 
 
