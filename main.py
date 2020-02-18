@@ -46,7 +46,7 @@ def main():
                             metrics=[gen_loss, disc_loss, auxi_loss], noise_generator=get_noise
                             )
 
-    for epoch in range(0):
+    for epoch in range(50):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
