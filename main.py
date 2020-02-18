@@ -46,12 +46,13 @@ def main():
                             metrics=[gen_loss, disc_loss, auxi_loss], noise_generator=get_noise
                             )
 
-    for epoch in range(50):
+    for epoch in range(0):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
-        pic.save_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=get_noise, epoch=epoch)
+    epoch = 0
+    pic.save_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=get_noise, epoch=epoch)
     pic.show_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=get_noise)
     return
 
