@@ -14,7 +14,7 @@ windows_root='D:/Automatic/SRTP/GAN'
 root = ubuntu_root
 temp_root = root+'/temp'
 
-def main(continue_train, train_time):
+def main(continue_train, train_time, model_version):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
     noise_dim = 62
     auxi_dim = 12
@@ -22,12 +22,13 @@ def main(continue_train, train_time):
     generator_model, discriminator_model, auxiliary_model, model_name = get_gan([noise_dim+auxi_dim, ], [28, 28, 1])
     dataset = mnist_dataset(root=root, batch_size=batch_size)
     noise_gen = noise_generator(noise_dim, auxi_dim, 10,batch_size)
-    model_dataset = model_name + dataset.name
+    model_dataset = '{}_{}_{}'.format(model_name, dataset.name, model_version)
 
-    print('model: {}\ndataset: {}\nbatch_size: {}\nnoise_dim: {}\nauxi_dim: {}\n'.format(model_name, dataset.name, batch_size, noise_dim, auxi_dim))
+    print('model: {}\ndataset: {}\nbatch_size: {}\nnoise_dim: {}\nauxi_dim: {}\nmodel version: {}'.format(
+        model_name, dataset.name, batch_size, noise_dim, auxi_dim, model_version))
     train_dataset = dataset.get_train_dataset()
     
-    pic = draw(10, root, model_dataset, train_time)
+    pic = draw(10, temp_root, model_dataset, train_time)
     
     generator_optimizer = tf.keras.optimizers.Adam(1e-4)
     discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
@@ -51,13 +52,14 @@ def main(continue_train, train_time):
                             metrics=[gen_loss, disc_loss, auxi_loss], noise_generator=noise_gen
                             )
 
-    for epoch in range(50):
+    for epoch in range(100):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
             pic.save()
-        pic.save_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=noise_gen, epoch=epoch)
+        rdm_list = np.random.uniform(-1, 1, size=(1, 2))
+        pic.save_created_pic(generator_model, np.arange(10), rdm_list[0], noise_generator=noise_gen, epoch=epoch)
     pic.show_created_pic(generator_model, np.arange(10), [0.2, 0.1], noise_generator=noise_gen)
     return
 
@@ -66,4 +68,4 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
 
-    main(continue_train=False, train_time=0)
+    main(continue_train=False, train_time=0, model_version=1)
