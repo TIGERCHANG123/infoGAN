@@ -42,7 +42,7 @@ class train_one_epoch():
     ])
     def train_step(self, noise, auxi_real, images):
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disauxi_tape, tf.GradientTape() as auxi_tape:
-            g_input = tf.concat(noise, auxi_real)
+            g_input = tf.concat([noise, auxi_real], axis=-1)
             generated_images = self.generator(g_input, training=True)
             _, real_output = self.discriminator(images, training=True)
             auxi_input, fake_output = self.discriminator(generated_images, training=True)

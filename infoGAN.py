@@ -81,16 +81,16 @@ class discriminator(tf.keras.Model):
 class auxiliary(tf.keras.Model):
   def __init__(self, hidden=128, auxi_dim=12):
     super(auxiliary, self).__init__()
-    self.dense = layers.Dense(auxi_dim)
+    self.dense = layers.Dense(hidden)
     self.bn = tf.keras.layers.BatchNormalization()
     self.leakyRelu = tf.keras.layers.LeakyReLU(0.1)
 
-    self.output = tf.keras.layers.Dense(hidden)
+    self.outputDense = tf.keras.layers.Dense(auxi_dim)
   def call(self, x):
     x = self.dense(x)
     x = self.bn(x)
     x = self.leakyRelu(x)
-    x = self.output(x)
+    x = self.outputDense(x)
     return x
 
 

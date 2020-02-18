@@ -43,7 +43,7 @@ def main():
     get_noise = noise_generator(noise_dim, auxi_dim, 10, 128)
     train = train_one_epoch(model=[generator_model, discriminator_model, auxiliary_model], train_dataset=train_dataset,
                             optimizers=[generator_optimizer, discriminator_optimizer, auxi_optimizer],
-                            metrics=[gen_loss, disc_loss, auxi_loss, auxi_loss], noise_generator=get_noise
+                            metrics=[gen_loss, disc_loss, auxi_loss], noise_generator=get_noise
                             )
 
     for epoch in range(50):
