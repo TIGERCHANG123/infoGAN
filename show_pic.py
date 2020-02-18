@@ -107,6 +107,6 @@ class draw:
       _, _, x = noise_generator.get_fixed_noise(i, auxi_con_1, auxi_con_2)
       y = generator(x)
       y = tf.squeeze(y)
-      plt.imsave(self.generated_pic_path + '/{}_{}.png'.format(epoch, i), y.numpy())
+      plt.imsave(self.generated_pic_path + '/{}_{}_{}.png'.format(self.train_time, epoch, i), y.numpy())
 
     return
