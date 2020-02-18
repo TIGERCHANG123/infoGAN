@@ -4,19 +4,20 @@ import tensorflow as tf
 import numpy as np
 
 class mnist_dataset():
-    def __init__(self, root):
+    def __init__(self, root, batch_size):
         file_path = root + '/datasets/tensorflow_datasets'
         mnist, meta = tfds.load('mnist', data_dir=file_path, download=False, as_supervised=True, with_info=True)
         print(meta)
         self.train_dataset=mnist['train']
         self.name = 'mnist'
+        self.batch_size = batch_size
         return
     def parse(self, x, y):
         x=tf.cast(x, tf.float32)
         x=x/255*2-1.0
         return x
     def get_train_dataset(self):
-        train_dataset = self.train_dataset.map(self.parse).shuffle(60000).batch(128)
+        train_dataset = self.train_dataset.map(self.parse).shuffle(60000).batch(self.batch_size)
         return train_dataset
 
 class noise_generator():

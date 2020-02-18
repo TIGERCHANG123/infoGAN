@@ -18,9 +18,10 @@ def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
     noise_dim = 62
     auxi_dim = 12
+    batch_size = 128
     generator_model, discriminator_model, auxiliary_model, model_name = get_gan([noise_dim+auxi_dim, ], [28, 28, 1])
-    dataset = mnist_dataset(root=root)
-    noise_gen = noise_generator(noise_dim, auxi_dim, 10, 128)
+    dataset = mnist_dataset(root=root, batch_size=batch_size)
+    noise_gen = noise_generator(noise_dim, auxi_dim, 10,batch_size)
     
     model_dataset = model_name + dataset.name
     train_dataset = dataset.get_train_dataset()
