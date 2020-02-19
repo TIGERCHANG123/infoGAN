@@ -29,7 +29,7 @@ class train_one_epoch():
         auxi_continuous_pred = auxi_pred[:, dict_len:]
         auxi_continuous_real = auxi_real[:, dict_len:]
         auxi_loss_continuouts = tf.reduce_mean(
-            tf.reduce_sum(tf.square(auxi_continuous_pred - auxi_continuous_real), axis=1))
+            tf.nn.sigmoid_cross_entropy_with_logits(logits=auxi_continuous_pred ,labels=auxi_continuous_real), axis=1)
 
         return auxi_loss_dict + auxi_loss_continuouts
 
@@ -68,7 +68,7 @@ class train_one_epoch():
 
         for (batch, (image, label)) in enumerate(self.train_dataset):
             noise, auxi_code = self.noise_genrator.get_noise(image.shape[0])
-            self.train_step(noise, label, image)
+            self.train_step(noise, auxi_code, image)
             pic.add([self.gen_loss.result().numpy(), self.disauxi_loss.result().numpy(), self.auxi_loss.result().numpy()])
             # if batch % 500 == 0:
         print('epoch: {}, gen loss: {}, disc loss: {}, auxi loss: {}'.format(epoch, self.gen_loss.result(), self.disauxi_loss.result(), self.auxi_loss.result()))
