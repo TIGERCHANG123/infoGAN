@@ -56,7 +56,8 @@ class train_one_epoch():
 
         gradients_of_generator = gen_tape.gradient(gen_loss, self.generator.trainable_variables)
         gradients_of_discriminator = disauxi_tape.gradient(disauxi_loss, self.discriminator.trainable_variables)
-        gradients_of_auxiliary = auxi_tape.gradient(auxi_loss, self.auxiliary.trainable_variables)
+        gradients_of_auxiliary = auxi_tape.gradient(auxi_loss,
+                                                    self.auxiliary.trainable_variables+self.discriminator.trainable_variables+self.generator.trainable_variables)
 
         self.generator_optimizer.apply_gradients(zip(gradients_of_generator, self.generator.trainable_variables))
         self.discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, self.discriminator.trainable_variables))
